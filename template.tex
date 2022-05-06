@@ -1,0 +1,82 @@
+\documentclass[10pt,twocolumn]{article} 
+
+\usepackage{oxycomps} % use the main oxycomps style file
+
+\bibliography{references}
+
+\pdfinfo{
+    /Title (Tutorial Report)
+    /Author (Eddie Valdez)
+}
+
+\title{iOS App Tutorial Report}
+
+\author{Eddie Valdez}
+\affiliation{Occidental College}
+\email{evaldez@oxy.edu}
+
+\begin{document}
+
+\maketitle
+
+\begin{intro}
+    This document serves as a tutorial report for the tutorial by Apple for developing an iOS application that I completed. In this tutorial, I learned how to use Xcode, SwiftUI, and UIKit in order to create a feature rich iOS app. I followed this tutorial so that I may learn that basics of how to develop an iOS app using SwiftUI and Xcode in order to be able to later create an iOS app of my choosing for my Oxy Senior Comps Project. The app that I created is called Scrumdinger. It is an app that creates and manages meetings. It is relevant to my senior comps project because it has a lot of similar features that my own proposed application will have including a timer, a theme setter, stored sounds, aesthetic and interactive graphics, and data management. It also generally taught me how to develop and test an app using the Xcode environment. I will be discussing the process of following the tutorial.
+\end{intro}
+
+\section{SwiftUI Overview}
+
+The first step in the tutorial was an overview of the basics of the Swift programming language. The overview provided important information about Swift including an overview of Swift's syntax, data types, and unique language features like optionals. Additionally, it provided information about key SwiftUI features like declarative syntax, a compositional API, a powerful layout system, views that reflect app data, and automatic accessibility support. 
+
+\section{Planning the app}
+
+A description of the app was provided. It discussed the purpose of the Scrumdinger app which is to provide an iOS app that helps users manage their daily scrums. Scrums are what many software engineering teams call the daily meetings they usually have to plan their work for the day. It also discussed the approach that will be taken in developing this app which is to keep scrums short and focused. 
+
+This section then provides a an example of what each screen of the app will look like along with a description of its functionality. It laid out the plan for three different screens that were going to be built:
+\begin{itemize}
+  \item The Scrum List screen
+  \item The Scrum Detail and Edit screen 
+  \item The Meeting Timer screen
+\end{itemize}
+
+\section{Creating Views}
+
+The next step in the tutorial was to begin composing the UI, User Interface, of the Scrumdinger app. I began by creating a new project in Xcode. I then used SwiftUI's declarative syntax to build a group of views for the Meeting Timer Screen. Views is the term SwiftUI uses to describe different screens. The way the view is created by using Vertical Stacks and Horizontal Stack to stack component together. I used both horizontal and vertical stacks to stack various components of the the timer screen together. This includes adding prototype shapes, a prototype progress bar, system images, and a prototype button. Accessibility support was also added to this view so. The accessibility that was added was to proving text descriptions for the components of the Meeting Timer Screen.
+
+The next step was creating a Card View for the Scrum List screen. The Scrum List screen provides a list of Cards that contain a summary of each scrum. The first step in creating the Card View was creating a Color Theme for the scrumns in order to create a consistent look throughout the app. 
+
+The next step was to create a Daily Scrum Model as a struct so that each scrum could have a its own properties and use that data as the contents of what is to be displayed. After creating this, I created the card view that uses the Daily Scrum model struct data to display the title, number of participants, and duration of the scrum. The view was put together using the different types of stacks, the color themes I declared earlier, and some padding. Additionally, I added some customized labels styles that Correspond with the meeting length. They use the same icons as the timer screen to create consistency. Accessibility support was also added to the card views.
+
+After creating the card view, I then had to create a List container to display the daily scrum cards in a single scrollable column. The list container creates a list view of the daily scrum card view objects that were previously created. The next task was to make each scrum identifiable by using their id property instead of their name in case two daily scrum models have the same name. 
+
+The next step was to create a navigation hierarchy. To do this, I used the NavigationView container. The NavigationView container is used to traverse a stack of views in a hierarchy. I wrapped the root view in the main app file ScrumdingerApp.swift. I then created a detailed view of the scrum so that specific data elements could be manipulated. This is essentially an edit screen for the user to be able to manipulate scrumns. I then added visual components to the detail view to be aesthetic. This includes the name of a scrum, meeting duration, card color, and the attendee list. In order to iterate through the attendees, we used ForEach to iterate through the list of scrum views. We will use the same to iterate through the list of attendees. Lastly, I added the detail screen to the navigation hierarchy in its properly position.  
+
+The next step in the tutorial was to deal with managing data flow between views. This is important for displaying information to the user and if the user is modifying data. In order to do this, I used @State and @Binding in order to establish a source of truth for each data element that any view can access. This source of truth will be in the ScrumdingerApp.swift file. I used the swift property wrappers @State and @Binding to maintain the source of truth. After implementing these, the user was then able to modify scrum details and add new scrums and have them be the same throughout different screens of the app.
+
+After creating a source of truth for our scrum data, I then created a new edit view screen that contains standard controls for iOS apps. I added buttons, a slider for the duration length, and a text field for attendee names. This new edit screen changes the scrum in a data property using the @State wrapper. I recreated the same attendee add screen as before except in this one, I added functionality to be able to delete attendees. Also new attendees can not be added if the attendee name text field is empty. After finishing the edit view, I made it so that this view is displayed when the user clicks the edit button of the detail view screen. 
+
+The next step was to expand the editing capabilities of the edit screen by building a color theme picker using bindings that allow the theme picker and edit views to share their data. This is different from the previous step because before I used bindings to share data between the edit view and individual graphic controls. The first step in doing this was creating a theme view screen that contains a list of different themes to pick from. After I created this view, I stored the value of the selected theme in a variable that is bound to the parent view. By binding it to the parent view, the edit view, the theme view allows the theme selection to be known to the parent view. By doing this, I then could pass the bindings into the detail view. Similarly, I then passed the bindings to the list view. This is following the hierarchy we created.
+
+The next step was to use a reference type as a source of truth instead of using the @State and @Binding property wrappers. This is because our need to to use reference types as a sources of data which does not work with the @State attribute. @state attributes only work with value types. In order to use reference types as sources of truth, we used @ObservedObject, @StateObject, and @EnvironmentObject. The tutorial provided an overview of making classes observable and monitoring an object for changes. 
+
+Next, the tutorial provided an overview of how to perform actions in response to changes in app state. It discussed scene architecture, app state, and views responding to events, including views that appear and disappear from the screen. After learning this, I then implemented using reference type models with the SwiftUI Views that we created. Before implementing this to the timer view,  I created an overlay view to the meeting timer view screen that correlates with the theme of the scrum. I modified the the meeting header to be its own view for the purpose of more easily maintain the code. I implemented a dynamic ProgressView that updates the bar given how much time has passed and the scrum meeting length. After finalizing the design of the view, I added a State Object for a source of truth by conforming the model to ObservableObject protocol for the ScrumTimer class. Additionally, I implemented life cycle events so that certain events can be triggered when a view appears and disappears. I did this to the ScrumTimer class to reset, start, and stop the timer at specific times in the view’s life cycle. The next step was to extract the meeting footer into being a sub-view of MeetingTimer along with adding code to determine the speaker's number and name.This footer receives calls from the ScrumTimer class in order to advance the timer to the next speaker. Additionally, I implemented a sound to be triggered when a speaker's time has ended using AVFoundation. 
+
+The next step in the tutorial was to add a view to create new scrum meetings and to update the meeting timer to keep track of past meeting. This required updating data that is shared in multiple views in the app. Because of this, I had to use @State bindings and sources of truth. First I used the DetailEditView to create a new scrum. Then, in Scrums view, I added a button that triggers the creating of. a new scrum using the updated DetailEditView. I then added a history element to the scrum. Additionally, I updated DetailView to display a list of the history of the scrum.
+
+The next step was regarding how to keep the scrum data from being deleted once the app quits and is relaunched. In order to fix this and make data persistent, I updated Scrumdinger to use Codable conformance for the app’s models and write methods to load and save scrums. I created a data store which is a class that served as the data model for my app. I also had to add a method to load data from the scrums.data file when the root view appears on the screen. Lastly, I had to add a method that saved the user scrum data to the file system when the state of the app becomes inactive. The tutorial then provided an overview of adopting new API features and Swift concurrency. 
+
+In order to modernize our asynchronous code, I changed the deployment target to use concurrency features that are only available in iOS 15 and up. I then used withCheckedThrowingContinuation to create an asynchronous version of the load method. Similarly, I then created an asynchronous version of the save method. In order to call these asynchronous methods, I used tasks.
+
+The next step in the development of the app was to handle errors. In order to handle errors, I added an error wrapper structure. I also created a new view for errors. This error view has a modal view. The next step after implementing the error handler and the error view was to trigger an error manually using App Sandbox in order to see how the app responded. 
+
+Next, I had to create the final meeting timer view. This section is the middle that has not been modified and is static. I modified it to present the current attendee who is speaking. Next, I had to create an ArcView that visualized the meeting progress in the middle circle. This arc traces a portion of the circle representing one speaker's time. This was done by creating a Shape protocol. Next, the tutorial provided an overview of Examining data flow in Scrumdinger.
+
+The final step in the tutorial was adding a speech to text transcript feature. The first thing that was implemented was requesting authorization to the device microphone. This is important and required for privacy reasons. After implementing these permissions, I then integrated speech recognition into the meeting view. I did this using built in speech recognition methods and calling them when a meeting is happening and ending when the meeting is no longer happening. I also added visual and accessibility elements to the meeting screen to let attendees know when audio recording is taking place. I then implemented a history view that displays the meeting text and attendees of the scrums meeting. Lastly, I implemented the History view into Scrumdinger.
+
+\section{Results and Discussion}
+
+I was able to fully follow this tutorial and create a working Scrumdinger iOS app. This app uses dynamic graphs and sounds to indicate when and how long each attendee should speak. The app also displays a progress screen that shows the time remaining in the meeting and creates a transcript that users have access to along with other meeting information such as attendees. The user can also change the theme of different scrums. This is a fully function app that used saves user data and handles errors. 
+
+This tutorial has been very useful in my understanding of how to develop an iOS app. I will use many of the features that I used in the Scrumdinger app in the development of my own app including Swifts API's, its resources for images, hierarchical views, drawing graphics, using audio files, saving and loading data, and using its themes. I learned that Swift has many convenient built in features that make designing app's a lot easier. I found it very useful that I could code all this in Xcode and be able to visualize what I am creating and test in all in one enviorment. Views in swift make it very easy to create UI elements. The preview feature of views in Swift was very useful for tweaking different configurations. Overall, this tutorial taught me a lot about app development and I will be using Swift to develop my iOS app in the future.
+
+
+\end{document}
